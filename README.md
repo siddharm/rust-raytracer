@@ -3,10 +3,10 @@ this is a simple raytracer written in rust, to help me learn linear algebra and 
 currently it supports spheres.
 
 ## todo
-* planes
-* point light sources
-* other 3D shapes
-* displaying depth
+- [x] planes
+- [] point light sources
+- [] other 3D shapes
+- [] displaying depth
 
 ## stretch goals
 * texture mapping
