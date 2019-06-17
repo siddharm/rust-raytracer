@@ -4,11 +4,14 @@ currently it supports spheres.
 
 ## todo
 - [x] planes
-- [] point light sources
-- [] other 3D shapes
-- [] displaying depth
+- [x] split into multiple modules
+- [ ] point light sources
+- [ ] displaying depth
+- [ ] parallelize render loop
 
 ## stretch goals
+* other 3D shapes
 * texture mapping
 * reflections
 * ?autostereogram creation?
+* ?fast inverse square root?
