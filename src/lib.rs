@@ -86,35 +86,19 @@ impl std::ops::Mul<f64> for &Color {
     }
 }
 
+impl std::ops::Mul<&Color> for &Color {
+    type Output = Color;
 
+    fn mul(self, _rhs: &Color) -> Color {
 
-/*
-impl<'a, 'b> std::ops::Mul<&'b Color> for &'a Color {
-    type Output = &'a Color;
-
-    fn mul(self, color2: &'b Color) -> &'a Color {
-        &Color {
-            r: self.r * color2.r,
-            g: self.g * color2.g,
-            b: self.b * color2.b,
+        Color {
+            r: self.r * _rhs.r,
+            g: self.g * _rhs.g,
+            b: self.b * _rhs.b,
         }
     }
-
 }
 
-impl<'a> std::ops::Mul<f64> for &'a Color {
-    type Output = &'a Color;
-
-    fn mul(self, scalar: f64) -> &'a Color {
-        &Color {
-            r: self.r * scalar,
-            g: self.g * scalar,
-            b: self.b * scalar,
-        }
-    }
-
-}
-*/
 
 impl Renderable for Scene {
     fn render(&mut self) -> image::ImageBuffer<image::Rgb<u8>, std::vec::Vec<u8>> {
@@ -196,7 +180,7 @@ impl Intersectable for Plane {
         let light_power = (surface_normal.dot(direction_to_light)).max(0.0) * light.intensity;
         let light_reflected = self.albedo / std::f64::consts::PI;
         
-        let color = &(&self.color * light_power) * light_power;
+        let color = &(&(&self.color * &light.color) * light_power) * light_reflected;
 
         //let color = &self.color * &light.color * light_power * light_reflected;
         
@@ -242,7 +226,7 @@ impl Intersectable for Sphere {
         let light_power = (surface_normal.dot(direction_to_light)).max(0.0) * light.intensity;
         let light_reflected = self.albedo / std::f64::consts::PI;
         
-        let color = &(&self.color * light_power) * light_power;
+        let color = &(&(&self.color * &light.color) * light_power) * light_reflected;
 
         //let color = &self.color * &light.color * light_power * light_reflected;
 

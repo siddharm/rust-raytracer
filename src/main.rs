@@ -1,7 +1,7 @@
 extern crate image;
 extern crate rand;
 extern crate cgmath;
-use cgmath::*;
+
 
 mod lib;
 use crate::lib::*;
@@ -59,11 +59,17 @@ fn create_scene() -> Scene {
         direction: cgmath::Vector3::new(10.0, -3.0, 5.0),
         //direction: cgmath::Vector3::new(-10.0, 0.0, 0.0),
         color: Color {
+            r: 1.0,
+            g: 1.0,
+            b: 1.0,
+            
+            /*
             r: 0.60,
             g: 0.40,     //purple
             b: 0.53,
+            */
         },
-        intensity: 200.0,
+        intensity: 1.0,
     };
 
     let scene = Scene {
