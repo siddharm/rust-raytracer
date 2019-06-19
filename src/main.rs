@@ -57,6 +57,7 @@ fn create_scene() -> Scene {
 
     let light1 = DirectionalLight {
         direction: cgmath::Vector3::new(10.0, -3.0, 5.0),
+        //direction: cgmath::Vector3::new(-10.0, 0.0, 0.0),
         color: Color {
             r: 0.60,
             g: 0.40,     //purple

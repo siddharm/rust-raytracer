@@ -2,7 +2,7 @@ extern crate image;
 extern crate rand;
 extern crate cgmath;
 use cgmath::*;
-use std::ops;
+
 
 /*-------------Enums--------------------*/
 pub enum Object {
@@ -73,11 +73,27 @@ pub trait Renderable {
 
 /*-------------Implementations----------*/
 
-impl ops::Mul<Color> for Color {
+impl std::ops::Mul<f64> for &Color {
     type Output = Color;
 
-    fn mul(self, color2: Color) -> Color {
+    fn mul(self, _rhs: f64) -> Color {
+
         Color {
+            r: self.r * _rhs,
+            g: self.g * _rhs,
+            b: self.b * _rhs,
+        }
+    }
+}
+
+
+
+/*
+impl<'a, 'b> std::ops::Mul<&'b Color> for &'a Color {
+    type Output = &'a Color;
+
+    fn mul(self, color2: &'b Color) -> &'a Color {
+        &Color {
             r: self.r * color2.r,
             g: self.g * color2.g,
             b: self.b * color2.b,
@@ -86,12 +102,11 @@ impl ops::Mul<Color> for Color {
 
 }
 
+impl<'a> std::ops::Mul<f64> for &'a Color {
+    type Output = &'a Color;
 
-impl ops::Mul<f64> for Color {
-    type Output = Color;
-
-    fn mul(self, scalar: f64) -> Color {
-        Color {
+    fn mul(self, scalar: f64) -> &'a Color {
+        &Color {
             r: self.r * scalar,
             g: self.g * scalar,
             b: self.b * scalar,
@@ -99,15 +114,12 @@ impl ops::Mul<f64> for Color {
     }
 
 }
-
-
-
+*/
 
 impl Renderable for Scene {
     fn render(&mut self) -> image::ImageBuffer<image::Rgb<u8>, std::vec::Vec<u8>> {
         let mut imgbuf = image::ImageBuffer::new(self.width, self.height);
 
-    
         for (x, y, px) in imgbuf.enumerate_pixels_mut() {
             //create prime ray
             //if the prime ray intersects with the objects in the scene
@@ -184,9 +196,11 @@ impl Intersectable for Plane {
         let light_power = (surface_normal.dot(direction_to_light)).max(0.0) * light.intensity;
         let light_reflected = self.albedo / std::f64::consts::PI;
         
-        //let color = &self.color * &light.color * light_power * light_reflected;
+        let color = &(&self.color * light_power) * light_power;
 
-        let color = &self.color;
+        //let color = &self.color * &light.color * light_power * light_reflected;
+        
+        //let color = &self.color;
 
         image::Rgb([(255.0 * color.r) as u8, (255.0 * color.g) as u8, (255.0 * color.b) as u8])
     }
@@ -228,9 +242,11 @@ impl Intersectable for Sphere {
         let light_power = (surface_normal.dot(direction_to_light)).max(0.0) * light.intensity;
         let light_reflected = self.albedo / std::f64::consts::PI;
         
-        //let color = self.color * light.color * light_power * light_reflected;
+        let color = &(&self.color * light_power) * light_power;
 
-        let color = &self.color;
+        //let color = &self.color * &light.color * light_power * light_reflected;
+
+        //let color = &self.color;
         
         image::Rgb([(255.0 * color.r) as u8, (255.0 * color.g) as u8, (255.0 * color.b) as u8])
     }

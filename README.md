@@ -15,3 +15,6 @@ currently it supports spheres.
 * reflections
 * ?autostereogram creation?
 * ?fast inverse square root?
+
+## Work in progress image:
+![thing](output/thing.png)
