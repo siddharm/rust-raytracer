@@ -2,18 +2,15 @@ extern crate image;
 extern crate rand;
 extern crate cgmath;
 
-
 mod lib;
 use crate::lib::*;
 
 
-
-/*-------------Functions----------------*/
-
-
 fn create_scene() -> Scene {
+    //behind sphere
     let sphere1 = Sphere {
         center: cgmath::Vector3::new(-4.0, 2.0, -9.0),
+        //center: cgmath::Vector3::new(0.0, 2.0, -4.0),
         radius: 3.0,
         color: Color {
             r: 0.84,
@@ -22,7 +19,10 @@ fn create_scene() -> Scene {
         },
         albedo: 0.5,
     };
+    
+    //in front sphere
     let sphere2 = Sphere {
+        //center: cgmath::Vector3::new(0.0, 2.0, -7.0),
         center: cgmath::Vector3::new(0.0, 2.0, -7.0),
         radius: 3.0,
         color: Color {
@@ -33,6 +33,7 @@ fn create_scene() -> Scene {
         albedo: 0.5,
     };
 
+    //bottom
     let plane1 = Plane {
         origin: cgmath::Vector3::new(0.0, -8.0, 0.0),
         normal: cgmath::Vector3::new(0.0, -7.0, 0.0),
@@ -44,21 +45,33 @@ fn create_scene() -> Scene {
         albedo: 0.5,
     };
 
+    //right plane
     let plane2 = Plane {
-        origin: cgmath::Vector3::new(20.0, 0.0, 0.0),
+        origin: cgmath::Vector3::new(20.0, 1.0, 1.0),
         normal: cgmath::Vector3::new(10.0, 0.0, 0.0),
         color: Color {
+            
+
+            r: 0.29,
+            g: 0.3921,      //green
+            b: 0.1921,
+            
+            
+            /*
             r: 0.30,
             g: 0.34,      //gray
             b: 0.36,
+            */
         },
         albedo: 0.5,
     };
 
     let light1 = DirectionalLight {
+        //direction: cgmath::Vector3::new(10.0, -3.0, 5.0),
         direction: cgmath::Vector3::new(10.0, -3.0, 5.0),
-        //direction: cgmath::Vector3::new(-10.0, 0.0, 0.0),
+
         color: Color {
+            
             r: 1.0,
             g: 1.0,
             b: 1.0,
@@ -69,7 +82,7 @@ fn create_scene() -> Scene {
             b: 0.53,
             */
         },
-        intensity: 1.0,
+        intensity: 0.8,
     };
 
     let scene = Scene {

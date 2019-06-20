@@ -1,12 +1,14 @@
 # rust-raytracer
-this is a simple raytracer written in rust, to help me learn linear algebra and keep me occupied over the summer.
+this is a simple raytracer written in rust to help me learn linear algebra and keep me occupied over the summer.
 currently it supports spheres.
 
 ## todo
 - [x] planes
 - [x] split into multiple modules
-- [ ] point light sources
-- [ ] displaying depth
+- [x] point light source
+- [ ] generalize trace function
+- [ ] shadows
+- [ ] multiple light sources
 - [ ] parallelize render loop
 
 ## stretch goals
@@ -17,5 +19,5 @@ currently it supports spheres.
 * ?fast inverse square root?
 * ?non euclidean geometry?
 
-## Work in progress image:
+## work in progress image:
 ![thing](output/thing.png)

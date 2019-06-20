@@ -59,7 +59,7 @@ pub struct Plane {
 /*-------------Traits-------------------*/
 
 pub trait Intersectable {
-    //returns tple of distance to the intersection and the point of intersection
+    //returns tuple of distance to the intersection and the point of intersection
     fn intersect(&self, ray: &Ray) -> Option<(f64, Vector3<f64>)>;
     //returns an RGB struct of the desired pixel
     fn get_pixel(&mut self, hit_point: Vector3<f64>, light: &DirectionalLight) -> image::Rgb<u8>;
@@ -70,6 +70,7 @@ pub trait Intersectable {
 pub trait Renderable {
     fn render(&mut self) -> image::ImageBuffer<image::Rgb<u8>, std::vec::Vec<u8>>;
 }
+
 
 /*-------------Implementations----------*/
 
@@ -98,40 +99,6 @@ impl std::ops::Mul<&Color> for &Color {
         }
     }
 }
-
-
-impl Renderable for Scene {
-    fn render(&mut self) -> image::ImageBuffer<image::Rgb<u8>, std::vec::Vec<u8>> {
-        let mut imgbuf = image::ImageBuffer::new(self.width, self.height);
-
-        for (x, y, px) in imgbuf.enumerate_pixels_mut() {
-            //create prime ray
-            //if the prime ray intersects with the objects in the scene
-            //*px = get pixel of object
-            let mut rgb = image::Rgb([(255.0 * self.background_color.r) as u8, (255.0 * self.background_color.g) as u8, (255.0 * self.background_color.b) as u8]);
-            let mut min_dist: f64 = std::f64::INFINITY;
-            let pr: Ray = Ray::create_prime_ray(x, y, self);
-        
-            for obj in &mut self.objects {
-                //let tmp = obj.get_pixel(&pr);
-
-                match obj.intersect(&pr) {
-                    None => {},
-                    Some((dist, hit_pt)) => if dist < min_dist {
-                        min_dist = dist;
-                        rgb = obj.get_pixel(hit_pt, &self.light);
-                    },
-                }
-
-                *px = rgb; 
-            }
-          
-        }
-
-        imgbuf
-    }
-}
-
 
 impl Intersectable for Object {
     fn intersect(&self, ray: &Ray) -> Option<(f64, Vector3<f64>)> {
@@ -179,14 +146,26 @@ impl Intersectable for Plane {
         let direction_to_light = -light.direction;
         let light_power = (surface_normal.dot(direction_to_light)).max(0.0) * light.intensity;
         let light_reflected = self.albedo / std::f64::consts::PI;
-        
-        let color = &(&(&self.color * &light.color) * light_power) * light_reflected;
 
-        //let color = &self.color * &light.color * light_power * light_reflected;
+
+        let shadow_ray = Ray {
+            origin: hit_point,
+            direction: direction_to_light,
+        };
+
+        //fn takes shadow ray and scene
+        //returns none or some
+        //if some: do shadow
+
+        //let illuminated = scene.trace(&shadow_ray);
+
         
+        let color = (&(&(&self.color * &light.color) * light_power) * light_reflected).clamp();
+
         //let color = &self.color;
-
+        
         image::Rgb([(255.0 * color.r) as u8, (255.0 * color.g) as u8, (255.0 * color.b) as u8])
+        
     }
 
     fn surface_normal(&self, hit_pt: Vector3<f64>) -> Vector3<f64> {
@@ -221,14 +200,26 @@ impl Intersectable for Sphere {
     }
 
     fn get_pixel(&mut self, hit_point: Vector3<f64>, light: &DirectionalLight) -> image::Rgb<u8> {
+        
         let surface_normal = self.surface_normal(hit_point);
         let direction_to_light = -light.direction;
         let light_power = (surface_normal.dot(direction_to_light)).max(0.0) * light.intensity;
         let light_reflected = self.albedo / std::f64::consts::PI;
-        
-        let color = &(&(&self.color * &light.color) * light_power) * light_reflected;
 
-        //let color = &self.color * &light.color * light_power * light_reflected;
+
+        let shadow_ray = Ray {
+            origin: hit_point,
+            direction: direction_to_light,
+        };
+
+        //fn takes shadow ray and scene
+        //returns none or some
+        //if some: do shadow
+
+        //let illuminated = scene.trace(&shadow_ray);
+
+        
+        let color = (&(&(&self.color * &light.color) * light_power) * light_reflected).clamp();
 
         //let color = &self.color;
         
@@ -237,6 +228,16 @@ impl Intersectable for Sphere {
 
     fn surface_normal(&self, hit_pt: Vector3<f64>) -> Vector3<f64> {
         (hit_pt - self.center).normalize()
+    }
+}
+
+impl Color {
+    pub fn clamp(self) -> Color {
+        Color {
+            r: self.r.min(1.0).max(0.0),
+            g: self.g.min(1.0).max(0.0),
+            b: self.b.min(1.0).max(0.0),
+        }
     }
 }
 
@@ -254,5 +255,41 @@ impl Ray {
             origin: Vector3::new(0.0, 0.0, 0.0),
             direction: Vector3::new(sensor_x, sensor_y, -1.0).normalize(),
         }
+    }
+}
+
+impl Renderable for Scene {
+    fn render(&mut self) -> image::ImageBuffer<image::Rgb<u8>, std::vec::Vec<u8>> {
+        let mut imgbuf = image::ImageBuffer::new(self.width, self.height);
+
+        for (x, y, px) in imgbuf.enumerate_pixels_mut() {
+            //create prime ray
+            //if the prime ray intersects with the objects in the scene
+            //*px = get pixel of object
+            let mut rgb = image::Rgb([(255.0 * self.background_color.r) as u8, (255.0 * self.background_color.g) as u8, (255.0 * self.background_color.b) as u8]);
+            let mut min_dist: f64 = std::f64::INFINITY;
+            let pr: Ray = Ray::create_prime_ray(x, y, self);
+
+
+        
+            for obj in &mut self.objects {
+                //let tmp = obj.get_pixel(&pr);
+
+                match obj.intersect(&pr) {
+                    None => {},
+                    Some((dist, hit_pt)) => if dist < min_dist {
+                        min_dist = dist;
+                        rgb = obj.get_pixel(hit_pt, &self.light);
+                    },
+                }
+
+                //*px = rgb; 
+            }
+
+            *px = rgb;
+          
+        }
+
+        imgbuf
     }
 }
