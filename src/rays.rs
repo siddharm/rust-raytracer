@@ -14,15 +14,10 @@ pub struct Ray {
 }
 
 /*-------------Traits-------------------*/
-/*
+
 pub trait Traceable {
-    fn trace(&self, objects: Vec<Object>) -> image::Rgb<u8>;
-
-
-    //prime_ray.trace(self.objects)
-
+    fn trace(&self, scene: &Scene) -> Option<image::Rgb<u8>>;
 }
-*/
 
 /*-------------Implementations----------*/
 
@@ -43,8 +38,32 @@ impl Ray {
     }
 }
 
-//impl Traceable for Ray {
+impl Traceable for Ray {
     /*So that's it, huh? We're some kind of... Ray Tracer??*/
-    
+    fn trace(&self, scene: &Scene) -> Option<image::Rgb<u8>> {
+        
+        let mut ans = None;
 
-//}
+        let mut min_dist: f64 = std::f64::INFINITY;
+
+        for obj in scene.objects.iter() {
+
+            match obj.intersect(&self) {
+                None => {},
+                Some((dist, hit_pt)) if dist < min_dist =>  {
+                    min_dist = dist;
+                    ans = Some(obj.get_pixel(&hit_pt, &scene));
+                },
+                Some(_) => {},
+            }
+ 
+        }
+        //print!("{}\n", min_dist);
+        //if min_dist <= 9.0 {
+          //  print!("same");
+        //}
+        ans
+
+    }
+
+}

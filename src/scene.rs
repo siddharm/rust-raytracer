@@ -90,30 +90,15 @@ impl Renderable for Scene {
             //create prime ray
             //if the prime ray intersects with the objects in the scene
             //*px = get pixel of object
-            let mut rgb = image::Rgb([(255.0 * self.background_color.r) as u8, (255.0 * self.background_color.g) as u8, (255.0 * self.background_color.b) as u8]);
-            let mut min_dist: f64 = std::f64::INFINITY;
             let pr: Ray = Ray::create_prime_ray(x, y, self);
+            let hit_obj = pr.trace(&self);
 
-            //prime_ray.trace(self.objects)
-
-
-        
-            for obj in &mut self.objects {
-                //let tmp = obj.get_pixel(&pr);
-
-                match obj.intersect(&pr) {
-                    None => {},
-                    Some((dist, hit_pt)) => if dist < min_dist {
-                        min_dist = dist;
-                        rgb = obj.get_pixel(hit_pt, &self.light);
-                    },
-                }
-
-                //*px = rgb; 
+            match hit_obj {
+                None => *px = image::Rgb([(255.0 * self.background_color.r) as u8,
+                                        (255.0 * self.background_color.g) as u8,
+                                        (255.0 * self.background_color.b) as u8]),
+                Some(a) => *px = a,
             }
-
-            *px = rgb;
-          
         }
 
         imgbuf

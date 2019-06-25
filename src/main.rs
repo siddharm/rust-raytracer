@@ -105,9 +105,9 @@ fn create_scene() -> Scene {
     };
 
     let light1 = DirectionalLight {
-        //direction: cgmath::Vector3::new(10.0, -3.0, 5.0),
-        direction: cgmath::Vector3::new(4.0, -9.0, 1.0),
-        //direction: cgmath::Vector3::new(1.0, 1.0, -1.0),
+        //direction: cgmath::Vector3::new(3.0, -10.0, 1.0),
+        direction: cgmath::Vector3::new(4.0, -9.0, -1.0),
+        //direction: cgmath::Vector3::new(2.0, 1.0, -1.0),
 
         color: Color {
             
