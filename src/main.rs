@@ -6,7 +6,7 @@ mod rays;
 mod scene;
 mod shapes;
 
-use crate::rays::*;
+
 use crate::shapes::*;
 use crate::scene::*;
 
@@ -30,7 +30,7 @@ fn create_scene() -> Scene {
             b: 0.46,
         },
         
-        albedo: 1.0,
+        albedo: 0.4,
     };
     
     //in front sphere
@@ -59,7 +59,7 @@ fn create_scene() -> Scene {
             b: 0.35,
         },
 
-        albedo: 1.0,
+        albedo: 0.4,
     };
 
     //bottom
@@ -76,12 +76,12 @@ fn create_scene() -> Scene {
             g: 0.84,      //gray
             b: 0.86,
         },
-        albedo: 0.9,
+        albedo: 0.05,
     };
 
     //right plane
     let plane2 = Plane {
-        origin: cgmath::Vector3::new(20.0, 0.0, 0.0),
+        origin: cgmath::Vector3::new(18.0, 0.0, 0.0),
         normal: cgmath::Vector3::new(6.0, 0.0, 0.0),
         color: Color {
             /*
@@ -101,12 +101,12 @@ fn create_scene() -> Scene {
             b: 0.36,
             */
         },
-        albedo: 0.9,
+        albedo: 0.1,
     };
 
     let light1 = DirectionalLight {
-        //direction: cgmath::Vector3::new(3.0, -10.0, 1.0),
-        direction: cgmath::Vector3::new(4.0, -9.0, -1.0),
+        //direction: cgmath::Vector3::new(2.0, -10.0, 4.0),
+        direction: cgmath::Vector3::new(4.0, -9.0, 0.0),
         //direction: cgmath::Vector3::new(2.0, 1.0, -1.0),
 
         color: Color {
@@ -121,12 +121,12 @@ fn create_scene() -> Scene {
             b: 0.53,
             */
         },
-        intensity: 0.5,
+        intensity: 7.0,
     };
 
     let scene = Scene {
         background_color: Color {
-            r: 0.13,
+            r: 0.13,    
             g: 0.18,      //navy
             b: 0.216,
         },

@@ -100,21 +100,16 @@ impl Intersectable for Plane {
             Some(a) => 0.0
         };
 
-        //let light_intensity = if in_light != None {scene.light.intensity} else {0.0};
-
         let light_power = (direction_to_light.dot(surface_normal)).max(0.0) * light_intensity;
         let light_reflected = self.albedo / std::f64::consts::PI;
 
-
         let color = (&(&(&self.color * &scene.light.color) * light_power) * light_reflected).clamp();
-
-        //let color = &self.color;
         
         image::Rgb([(255.0 * color.r) as u8, (255.0 * color.g) as u8, (255.0 * color.b) as u8])
         
     }
 
-    fn surface_normal(&self, hit_pt: &Vector3<f64>) -> Vector3<f64> {
+    fn surface_normal(&self, _hit_pt: &Vector3<f64>) -> Vector3<f64> {
         -self.normal
     } 
 
@@ -161,11 +156,11 @@ impl Intersectable for Sphere {
             Some(a) => 0.0
         };
 
-        let light_power = (direction_to_light.dot(surface_normal)).max(0.0) * light_intensity;
+        let light_power = (surface_normal.dot(direction_to_light)).max(0.0) * light_intensity;
         let light_reflected = self.albedo / std::f64::consts::PI;
-
-        let color = (&(&(&self.color * &scene.light.color) * light_power) * light_reflected).clamp();
         
+        let color = (&(&(&self.color * light_power) * light_reflected) * &scene.light.color).clamp();
+
         image::Rgb([(255.0 * color.r) as u8, (255.0 * color.g) as u8, (255.0 * color.b) as u8])
     }
 

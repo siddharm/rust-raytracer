@@ -45,6 +45,7 @@ impl Traceable for Ray {
         let mut ans = None;
 
         let mut min_dist: f64 = std::f64::INFINITY;
+        //let mut min_hit_pt: Vector3<f64> = Vector3::new();
 
         for obj in scene.objects.iter() {
 

@@ -6,8 +6,9 @@ currently it supports spheres.
 - [x] planes
 - [x] split into multiple modules
 - [x] point light source
-- [ ] generalize trace function
-- [ ] shadows
+- [x] generalize trace function
+- [x] shadows
+- [ ] fix the infinite loop of trace -> get_pixel -> trace, etc.
 - [ ] multiple light sources
 - [ ] parallelize render loop
 
