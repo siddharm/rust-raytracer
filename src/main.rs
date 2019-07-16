@@ -1,14 +1,13 @@
+extern crate cgmath;
 extern crate image;
 extern crate rand;
-extern crate cgmath;
 
 mod rays;
 mod scene;
 mod shapes;
 
-
-use crate::shapes::*;
 use crate::scene::*;
+use crate::shapes::*;
 
 fn create_scene() -> Scene {
     //behind sphere
@@ -23,16 +22,15 @@ fn create_scene() -> Scene {
             b: 0.0,
         },
         */
-        
         color: Color {
             r: 0.84,
-            g: 0.54,      //pink
+            g: 0.54, //pink
             b: 0.46,
         },
-        
+
         albedo: 0.4,
     };
-    
+
     //in front sphere
     let sphere2 = Sphere {
         //center: cgmath::Vector3::new(0.0, 2.0, -7.0),
@@ -52,10 +50,9 @@ fn create_scene() -> Scene {
             b: 0.18,
         },
         */
-
         color: Color {
             r: 0.07,
-            g: 0.313,      //wine
+            g: 0.313, //wine
             b: 0.35,
         },
 
@@ -73,7 +70,7 @@ fn create_scene() -> Scene {
             b: 0.25,
             */
             r: 0.80,
-            g: 0.84,      //gray
+            g: 0.84, //gray
             b: 0.86,
         },
         albedo: 0.05,
@@ -89,12 +86,9 @@ fn create_scene() -> Scene {
             g: 0.0,
             b: 1.0,
             */
-            
             r: 0.29,
-            g: 0.3921,      //green
+            g: 0.3921, //green
             b: 0.1921,
-            
-            
             /*
             r: 0.30,
             g: 0.34,      //gray
@@ -107,14 +101,12 @@ fn create_scene() -> Scene {
     let light1 = DirectionalLight {
         //direction: cgmath::Vector3::new(2.0, -10.0, 4.0),
         direction: cgmath::Vector3::new(4.0, -9.0, 0.0),
+        //direction: cgmath::Vector3::new(4.0, -1.0, -1.0),
         //direction: cgmath::Vector3::new(2.0, 1.0, -1.0),
-
         color: Color {
-            
             r: 1.0,
             g: 1.0,
             b: 1.0,
-            
             /*
             r: 0.60,
             g: 0.40,     //purple
@@ -124,30 +116,27 @@ fn create_scene() -> Scene {
         intensity: 7.0,
     };
 
-    let scene = Scene {
+    Scene {
         background_color: Color {
-            r: 0.13,    
-            g: 0.18,      //navy
+            r: 0.13,
+            g: 0.18, //navy
             b: 0.216,
         },
         width: 800,
         height: 600,
         fov: 90.0,
-        objects: vec!(
+        objects: vec![
             Object::Sphere(sphere1),
             Object::Sphere(sphere2),
             Object::Plane(plane1),
             Object::Plane(plane2),
-        ),
+        ],
         //lights: vec!(Light::Directional(light1),),
         light: light1,
-    };
-    scene
+    }
 }
 
-
 fn main() {
-
     println!("hallo");
 
     let mut scene = create_scene();
@@ -156,6 +145,7 @@ fn main() {
 
     println!("finished rendering");
 
-    imgbuf.save("output/thing.png").expect("saving image failed");
-
+    imgbuf
+        .save("output/thing.png")
+        .expect("saving image failed");
 }

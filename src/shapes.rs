@@ -1,6 +1,6 @@
+extern crate cgmath;
 extern crate image;
 extern crate rand;
-extern crate cgmath;
 use cgmath::*;
 
 use crate::rays::*;
@@ -51,12 +51,10 @@ impl Intersectable for Object {
     }
 
     fn get_pixel(&self, hit_point: &Vector3<f64>, scene: &Scene) -> image::Rgb<u8> {
-
         match self {
             Object::Sphere(s) => s.get_pixel(hit_point, scene),
             Object::Plane(p) => p.get_pixel(hit_point, scene),
         }
-        
     }
 
     fn surface_normal(&self, hit_pt: &Vector3<f64>) -> Vector3<f64> {
@@ -77,7 +75,7 @@ impl Intersectable for Plane {
             if distance >= 0.0 {
                 let hit_point = ray.origin + (ray.direction * distance);
                 let tup = (distance, hit_point);
-                return Some(tup)
+                return Some(tup);
             }
         }
         None
@@ -97,33 +95,36 @@ impl Intersectable for Plane {
 
         let light_intensity = match in_light {
             None => scene.light.intensity,
-            Some(a) => 0.0
+            Some(_a) => 0.0,
         };
 
         let light_power = (direction_to_light.dot(surface_normal)).max(0.0) * light_intensity;
         let light_reflected = self.albedo / std::f64::consts::PI;
 
-        let color = (&(&(&self.color * &scene.light.color) * light_power) * light_reflected).clamp();
-        
-        image::Rgb([(255.0 * color.r) as u8, (255.0 * color.g) as u8, (255.0 * color.b) as u8])
-        
+        let color =
+            (&(&(&self.color * &scene.light.color) * light_power) * light_reflected).clamp();
+
+        image::Rgb([
+            (255.0 * color.r) as u8,
+            (255.0 * color.g) as u8,
+            (255.0 * color.b) as u8,
+        ])
     }
 
     fn surface_normal(&self, _hit_pt: &Vector3<f64>) -> Vector3<f64> {
         -self.normal
-    } 
-
+    }
 }
 
 impl Intersectable for Sphere {
     fn intersect(&self, ray: &Ray) -> Option<(f64, Vector3<f64>)> {
         //vector from ray origin to sphere center
         let ray_center = self.center - ray.origin;
-        //vec from ray origin to point perpendicular  
+        //vec from ray origin to point perpendicular
         let adj = ray_center.dot(ray.direction);
         //does pythagorean theorem
         let d2 = ray_center.dot(ray_center) - (adj * adj);
-        
+
         let radius2 = self.radius * self.radius;
 
         if d2 > radius2 {
@@ -136,7 +137,7 @@ impl Intersectable for Sphere {
             let tup = (dist, hit_point);
 
             Some(tup)
-        }   
+        }
     }
 
     fn get_pixel(&self, hit_point: &Vector3<f64>, scene: &Scene) -> image::Rgb<u8> {
@@ -153,15 +154,20 @@ impl Intersectable for Sphere {
 
         let light_intensity = match in_light {
             None => scene.light.intensity,
-            Some(a) => 0.0
+            Some(_a) => 0.0,
         };
 
         let light_power = (surface_normal.dot(direction_to_light)).max(0.0) * light_intensity;
         let light_reflected = self.albedo / std::f64::consts::PI;
-        
-        let color = (&(&(&self.color * light_power) * light_reflected) * &scene.light.color).clamp();
 
-        image::Rgb([(255.0 * color.r) as u8, (255.0 * color.g) as u8, (255.0 * color.b) as u8])
+        let color =
+            (&(&(&self.color * light_power) * light_reflected) * &scene.light.color).clamp();
+
+        image::Rgb([
+            (255.0 * color.r) as u8,
+            (255.0 * color.g) as u8,
+            (255.0 * color.b) as u8,
+        ])
     }
 
     fn surface_normal(&self, hit_pt: &Vector3<f64>) -> Vector3<f64> {

@@ -1,6 +1,6 @@
+extern crate cgmath;
 extern crate image;
 extern crate rand;
-extern crate cgmath;
 use cgmath::*;
 
 use crate::rays::*;
@@ -50,7 +50,6 @@ impl std::ops::Mul<f64> for &Color {
     type Output = Color;
 
     fn mul(self, _rhs: f64) -> Color {
-
         Color {
             r: self.r * _rhs,
             g: self.g * _rhs,
@@ -63,7 +62,6 @@ impl std::ops::Mul<&Color> for &Color {
     type Output = Color;
 
     fn mul(self, _rhs: &Color) -> Color {
-
         Color {
             r: self.r * _rhs.r,
             g: self.g * _rhs.g,
@@ -91,14 +89,37 @@ impl Renderable for Scene {
             //if the prime ray intersects with the objects in the scene
             //*px = get pixel of object
             let pr: Ray = Ray::create_prime_ray(x, y, self);
-            let hit_obj = pr.trace(&self);
+            //let obj_pt = pr.trace(&self);
+            //let pix = obj_pt.0.get_pixel(&obj_pt.1, &self);
 
+            match pr.trace(&self) {
+                None => {
+                    *px = image::Rgb([
+                        (255.0 * self.background_color.r) as u8,
+                        (255.0 * self.background_color.g) as u8,
+                        (255.0 * self.background_color.b) as u8,
+                    ])
+                }
+                Some((obj, pt)) => *px = obj.get_pixel(&pt, &self),
+            }
+
+            //let hit_obj = pr.trace(&self);
+            /*
             match hit_obj {
                 None => *px = image::Rgb([(255.0 * self.background_color.r) as u8,
                                         (255.0 * self.background_color.g) as u8,
                                         (255.0 * self.background_color.b) as u8]),
                 Some(a) => *px = a,
             }
+            */
+            /*
+            match pix {
+                None => *px = image::Rgb([(255.0 * self.background_color.r) as u8,
+                                        (255.0 * self.background_color.g) as u8,
+                                        (255.0 * self.background_color.b) as u8]),
+                Some(a) => *px = a,
+            }
+            */
         }
 
         imgbuf

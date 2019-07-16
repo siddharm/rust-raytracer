@@ -8,7 +8,7 @@ currently it supports spheres.
 - [x] point light source
 - [x] generalize trace function
 - [x] shadows
-- [ ] fix the infinite loop of trace -> get_pixel -> trace, etc.
+- [x] fix the infinite loop of trace -> get_pixel -> trace, etc.
 - [ ] multiple light sources
 - [ ] parallelize render loop
 
